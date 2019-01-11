@@ -24,8 +24,19 @@ done
 echo
 echo "Setting up $SELECTED_PROJECT ..."
 
+# Copy templates
 cp -R "$BASE_DIR/$SELECTED_PROJECT/" .
 
+# Do some project name related things
+read -p "[Project Name]: " PROJECT_NAME
+sed -i "" 's/{{project-name}}/'"$PROJECT_NAME"'/g' README.md
+
+# Gradle-specific things
+if [[ $SELECTED_PROJECT == *"gradle"* ]]; then
+  echo "rootProject.name = $PROJECT_NAME" >> settings.gradle
+fi
+
+# Clean up
 rm -rf $DUMMY_DIR
 rm $ZIP_NAME
 
