@@ -13,19 +13,19 @@ curl -Ls https://github.com/bakdata/bakdata-project-templates/archive/master.zip
 mkdir -p $DUMMY_DIR && unzip -qq $ZIP_NAME -d $DUMMY_DIR
 BASE_DIR=$DUMMY_DIR/bakdata-project-templates-master
 
-echo "Select the project type to create"
+echo "Select the project type to create:"
 while [ -z "$SELECTED_PROJECT" ]; do
-  select SELECTED_PROJECT in $(ls $BASE_DIR);
+  select SELECTED_PROJECT in $(cd $BASE_DIR && ls -d */);
   do
     break;
   done
 done
 
 echo
-echo "Setting up $SELECTED_PROJECT..."
+echo "Setting up $SELECTED_PROJECT ..."
 
 cp -R "$BASE_DIR/$SELECTED_PROJECT/" .
 
 rm -rf $DUMMY_DIR
 rm $ZIP_NAME
-rm init.sh
+
