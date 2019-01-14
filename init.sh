@@ -33,7 +33,7 @@ sed -i "" 's/{{project-name}}/'"$PROJECT_NAME"'/g' README.md
 
 # Gradle-specific things
 if [[ $SELECTED_PROJECT == *"gradle"* ]]; then
-  echo "rootProject.name = $PROJECT_NAME" >> settings.gradle
+  echo "rootProject.name = '$PROJECT_NAME'" >> settings.gradle
 fi
 
 # Clean up
