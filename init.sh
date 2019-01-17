@@ -29,7 +29,13 @@ echo "Setting up $SELECTED_PROJECT ..."
 cp -R "$BASE_DIR/$SELECTED_PROJECT/" .
 
 # Do some project name related things
-read -p "[Project Name]: " PROJECT_NAME
+DEFAULT_PROJECT_NAME=$(basename $PWD)
+read -p "Enter Project Name (default: $DEFAULT_PROJECT_NAME): " PROJECT_NAME
+
+# We need this awkward-ish solution because `read -i` is not available on OSX
+[ -z "$PROJECT_NAME" ] && PROJECT_NAME="$DEFAULT_PROJECT_NAME"
+
+echo "Naming Project: $PROJECT_NAME"
 sed -i "" 's/{{project-name}}/'"$PROJECT_NAME"'/g' README.md
 
 # Run any project/language specific install commands
