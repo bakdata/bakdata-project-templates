@@ -2,16 +2,17 @@
 
 # Script to setup a new bakdata project from scratch.
 
-ZIP_NAME="bakdata-project-templates.tar.gz"
+ZIP_NAME="bakdata-project-templates.zip"
 DUMMY_DIR=".templates"
+GIT_BRANCH="master"
 
 # Get existing project templates
 echo -e "Downloading templates...\n"
-curl -Ls https://github.com/bakdata/bakdata-project-templates/archive/master.zip > $ZIP_NAME
+curl -H 'Cache-Control: no-cache' -Ls "https://github.com/bakdata/bakdata-project-templates/archive/$GIT_BRANCH.zip" > $ZIP_NAME
 
 # Extract all templates for now
 mkdir -p $DUMMY_DIR && unzip -qq $ZIP_NAME -d $DUMMY_DIR
-BASE_DIR=$DUMMY_DIR/bakdata-project-templates-master
+BASE_DIR="$DUMMY_DIR/bakdata-project-templates-$GIT_BRANCH"
 
 echo "Select the project type to create:"
 while [ -z "$SELECTED_PROJECT" ]; do
@@ -31,12 +32,24 @@ cp -R "$BASE_DIR/$SELECTED_PROJECT/" .
 read -p "[Project Name]: " PROJECT_NAME
 sed -i "" 's/{{project-name}}/'"$PROJECT_NAME"'/g' README.md
 
-# Gradle-specific things
-if [[ $SELECTED_PROJECT == *"gradle"* ]]; then
-  echo "rootProject.name = '$PROJECT_NAME'" >> settings.gradle
+# Run any project/language specific install commands
+POST_INIT_SCRIPT="post-init.sh"
+if [ -f "$POST_INIT_SCRIPT" ]; then
+  echo
+  echo "Running project specific setup..."
+  # Set environment variables needed in subscript
+  PROJECT_NAME="$PROJECT_NAME" \
+    sh "$POST_INIT_SCRIPT"
+
+  rm "$POST_INIT_SCRIPT"
 fi
 
 # Clean up
 rm -rf $DUMMY_DIR
 rm $ZIP_NAME
+
+# Add all files to git initially
+if [ -d ".git" ]; then
+  git add -A
+fi
 
