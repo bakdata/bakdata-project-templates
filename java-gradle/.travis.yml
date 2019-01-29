@@ -14,8 +14,9 @@ before_install:
 - |
   [[ -v OSSRH_USERNAME ]] && [[ -v OSSRH_PASSWORD ]] || (>&2 echo "Not all ossrh secrets are set" && travis_terminate 1)
   [[ -v SIGNING_KEY_ID ]] && [[ -v SIGNING_PASSWORD ]] || (>&2 echo "Not all signing secrets are set" && travis_terminate 1)
-  openssl aes-256-cbc -K $encrypted_b2a7add17b18_key -iv $encrypted_b2a7add17b18_iv -in secrets.tar.enc -out secrets.tar -d
-  tar xvf secrets.tar >/dev/null
+  mkdir -p .secrets
+  openssl aes-256-cbc -K $encrypted_XXXXXXXXXXXX_key -iv $encrypted_XXXXXXXXXXXX_iv -in secrets.tar.enc -out .secrets/secrets.tar -d
+  tar xvf .secrets/secrets.tar -C .secrets >/dev/null
 matrix:
   include:
   - stage: build
@@ -25,7 +26,7 @@ matrix:
     name: upload snapshot
     if: branch = master AND tag IS blank
     script:
-    - ./gradlew publishToNexus -x test -Possrh.username=$OSSRH_USERNAME -Possrh.password=$OSSRH_PASSWORD -Psigning.keyId=$SIGNING_KEY_ID -Psigning.password=$SIGNING_PASSWORD -Psigning.secretKeyRingFile=$(pwd)/.gnupg/secring.gpg
+    - ./gradlew publishToNexus -x test -Possrh.username=$OSSRH_USERNAME -Possrh.password=$OSSRH_PASSWORD -Psigning.keyId=$SIGNING_KEY_ID -Psigning.password=$SIGNING_PASSWORD -Psigning.secretKeyRingFile=$(pwd)/.secrets/secring.gpg
 
   - stage: deploy
     name: release new version
@@ -40,7 +41,7 @@ matrix:
     name: upload tagged release
     if: tag =~ ^\d+\.\d+\.\d+$
     script:
-    - ./gradlew publishToNexus closeAndReleaseRepository -x test -Possrh.username=$OSSRH_USERNAME -Possrh.password=$OSSRH_PASSWORD -Psigning.keyId=$SIGNING_KEY_ID -Psigning.password=$SIGNING_PASSWORD -Psigning.secretKeyRingFile=$(pwd)/.gnupg/secring.gpg
+    - ./gradlew publishToNexus closeAndReleaseRepository -x test -Possrh.username=$OSSRH_USERNAME -Possrh.password=$OSSRH_PASSWORD -Psigning.keyId=$SIGNING_KEY_ID -Psigning.password=$SIGNING_PASSWORD -Psigning.secretKeyRingFile=$(pwd)/.secrets/secring.gpg
 cache:
   directories:
   - "$HOME/.m2/repository"

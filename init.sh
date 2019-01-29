@@ -2,9 +2,13 @@
 
 # Script to setup a new bakdata project from scratch.
 
+# Check prerequisites
+command -v travis >/dev/null 2>&1 || { echo >&2 "Command travis required but not installed."; exit 1; }
+
 ZIP_NAME="bakdata-project-templates.zip"
 DUMMY_DIR=".templates"
 GIT_BRANCH="master"
+SECRETS_CACHE_DIR="$HOME/.bakdata"
 
 # Get existing project templates
 echo -e "Downloading templates...\n"
@@ -40,11 +44,12 @@ sed -i "" 's/{{project-name}}/'"$PROJECT_NAME"'/g' README.md
 
 # Run any project/language specific install commands
 POST_INIT_SCRIPT="post-init.sh"
+mkdir -p $SECRETS_CACHE_DIR
 if [ -f "$POST_INIT_SCRIPT" ]; then
   echo
   echo "Running project specific setup..."
   # Set environment variables needed in subscript
-  PROJECT_NAME="$PROJECT_NAME" \
+  PROJECT_NAME="$PROJECT_NAME" SECRETS_CACHE_DIR="$SECRETS_CACHE_DIR" \
     sh "$POST_INIT_SCRIPT"
 
   rm "$POST_INIT_SCRIPT"
