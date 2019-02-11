@@ -10,7 +10,7 @@ echo "rootProject.name = '$PROJECT_NAME'" >> settings.gradle
 ###
 SECRET_ENV="$SECRETS_CACHE_DIR/env"
 touch "$SECRET_ENV"
-declare -a required_variables=("OSSRH_USERNAME" "OSSRH_PASSWORD" "SIGNING_KEY_ID" "SIGNING_PASSWORD" "SONAR_TOKEN")
+declare -a required_variables=("OSSRH_USERNAME" "OSSRH_PASSWORD" "SIGNING_KEY_ID" "SIGNING_PASSWORD" "SONAR_TOKEN" "GITHUB_TOKEN")
 for key in "${required_variables[@]}"
 do
   value="$(grep -e "^$key=" $SECRET_ENV | cut -d "=" -f2- | tr -d '\r')"
