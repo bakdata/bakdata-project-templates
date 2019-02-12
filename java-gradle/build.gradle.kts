@@ -7,6 +7,7 @@ plugins {
     id("com.bakdata.sonar") version "1.0.0"
     id("com.bakdata.sonatype") version "1.0.0"
     id("io.franzbecker.gradle-lombok") version "1.14"
+    id("org.hildan.github.changelog") version "0.8.0"
 }
 
 allprojects {
@@ -52,4 +53,10 @@ subprojects {
         testRuntimeOnly(group = "org.junit.jupiter", name = "junit-jupiter-engine", version = "5.3.0")
         testImplementation(group = "org.assertj", name = "assertj-core", version = "3.11.1")
     }
+}
+
+configure<org.hildan.github.changelog.plugin.GitHubChangelogExtension> {
+    githubUser = "bakdata"
+    futureVersionTag = findProperty("changelog.releaseVersion")?.toString()
+    sinceTag = findProperty("changelog.sinceTag")?.toString()
 }

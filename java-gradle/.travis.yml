@@ -19,7 +19,6 @@ before_install:
     base64 --decode <<< $GITHUB_DEPLOY_SSH_KEY > .secrets/deploy-key
     base64 --decode <<< $SIGNING_SECRET_KEY_RING > .secrets/pgp-keyring
     export SIGNING_SECRET_KEY_RING_FILE=$(pwd)/.secrets/pgp-keyring
-    md5sum .secrets/deploy-key
 matrix:
   include:
     - stage: build
@@ -40,6 +39,8 @@ matrix:
         - travis/setup_deploy_key.sh
         - travis/prepare_git_for_bot.sh
       script:
+        - ./gradlew generateChangelog -Pchangelog.releaseVersion=${version}
+        - git add CHANGELOG.md && git commit -m "Changelog for version ${version}" && git push
         - ./gradlew release -Prelease.useAutomaticVersion=true -Prelease.releaseVersion=${version} -Prelease.failOnUnversionedFiles=false --stacktrace
 
     - stage: deploy
@@ -47,6 +48,17 @@ matrix:
       if: tag =~ ^\d+\.\d+\.\d+$
       script:
         - ./gradlew publishToNexus closeAndReleaseRepository -x test --stacktrace
+deploy:
+  provider: releases
+  api_key: ${GITHUB_TOKEN}
+  file_glob: true
+  file: "**/build/libs/*.jar"
+  name: "Release ${TRAVIS_TAG}"
+  skip_cleanup: true
+  on:
+    tags: true
+after_deploy:
+  - travis/github_release.sh
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
