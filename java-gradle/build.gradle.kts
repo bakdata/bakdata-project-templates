@@ -33,6 +33,12 @@ configure<com.bakdata.gradle.SonatypeSettings> {
     }
 }
 
+configure<org.hildan.github.changelog.plugin.GitHubChangelogExtension> {
+    githubUser = "bakdata"
+    futureVersionTag = findProperty("changelog.releaseVersion")?.toString()
+    sinceTag = findProperty("changelog.sinceTag")?.toString()
+}
+
 subprojects {
     apply(plugin = "java-library")
     apply(plugin = "io.franzbecker.gradle-lombok")
