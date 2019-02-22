@@ -1,12 +1,15 @@
-[![Build status](https://travis-ci.org/bakdata/{{project-name}}.svg?branch=master)](https://travis-ci.org/bakdata/{{project-name}}/)
-[![Sonarcloud status](https://sonarcloud.io/api/project_badges/measure?project=bakdata-{{project-name}}&metric=alert_status)](https://sonarcloud.io/dashboard?id=bakdata-{{project-name}})
-[![Code coverage](https://sonarcloud.io/api/project_badges/measure?project=bakdata-{{project-name}}&metric=coverage)](https://sonarcloud.io/dashboard?id=bakdata-{{project-name}})
-[![Maven](https://img.shields.io/maven-central/v/com.bakdata.{{project-name}}/{{project-name}}.svg)](https://search.maven.org/search?q=g:com.bakdata.{{project-name}}%20AND%20a:{{project-name}}&core=gav)
+[![Build status](https://travis-ci.org/bakdata/{{repo-name}}.svg?branch=master)](https://travis-ci.org/bakdata/{{repo-name}}/)
+[![Sonarcloud status](https://sonarcloud.io/api/project_badges/measure?project=bakdata-{{repo-name}}&metric=alert_status)](https://sonarcloud.io/dashboard?id=bakdata-{{repo-name}})
+[![Code coverage](https://sonarcloud.io/api/project_badges/measure?project=bakdata-{{repo-name}}&metric=coverage)](https://sonarcloud.io/dashboard?id=bakdata-{{repo-name}})
+[![Maven](https://img.shields.io/maven-central/v/com.bakdata.{{repo-name}}/{{repo-name}}.svg)](https://search.maven.org/search?q=g:com.bakdata.{{repo-name}}%20AND%20a:{{repo-name}}&core=gav)
 
 
-{{project-name}}
-================
+# {{project-name}}
 
+Quick intro on what this does.
+
+Optional:
+You can find a [blog post on medium](https://medium.com/bakdata/xxx) with some examples and detailed explanations of how {{project-name}} works.
 
 ## Getting Started
 
@@ -14,20 +17,20 @@ You can add {{project-name}} via Maven Central.
 
 #### Gradle
 ```gradle
-compile group: 'com.bakdata', name: '{{project-name}}', version: '1.0.0'
+compile group: 'com.bakdata', name: '{{repo-name}}', version: '1.0.0'
 ```
 
 #### Maven
 ```xml
 <dependency>
     <groupId>com.bakdata</groupId>
-    <artifactId>{{project-name}}</artifactId>
+    <artifactId>{{repo-name}}</artifactId>
     <version>1.0.0</version>
 </dependency>
 ```
 
 
-For other build tools or versions, refer to the [latest version in MvnRepository](https://mvnrepository.com/artifact/com.bakdata.{{project-name}}/{{project-name}}/latest).
+For other build tools or versions, refer to the [latest version in MvnRepository](https://mvnrepository.com/artifact/com.bakdata.{{repo-name}}/{{repo-name}}/latest).
 
 ### How to use it
 
@@ -42,7 +45,7 @@ class ExampleSnippet {
 
 #### More Examples
 
-You can find many more example in [this repository's XXX code](https://github.com/bakdata/{{project-name}}/xxx).
+You can find many more example in [this repository's XXX code](https://github.com/bakdata/{{repo-name}}/xxx).
 
 
 ## Development
@@ -51,8 +54,8 @@ If you want to contribute to this project, you can simply clone the repository a
 All dependencies should be included in the Gradle files, there are no external prerequisites.
 
 ```bash
-> git clone git@github.com:bakdata/{{project-name}}.git
-> cd {{project-name}} && ./gradlew build
+> git clone git@github.com:bakdata/{{repo-name}}.git
+> cd {{repo-name}} && ./gradlew build
 ```
 
 Please note, that we have [code styles](https://github.com/bakdata/bakdata-code-styles) for Java.
@@ -67,4 +70,4 @@ Just open an issue beforehand and let us know what you want to do and why.
 
 ## License
 This project is licensed under the MIT license.
-Have a look at the [LICENSE](https://github.com/bakdata/{{project-name}}/blob/master/LICENSE) for more details.
+Have a look at the [LICENSE](https://github.com/bakdata/{{repo-name}}/blob/master/LICENSE) for more details.

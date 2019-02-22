@@ -33,14 +33,15 @@ echo "Setting up $SELECTED_PROJECT ..."
 cp -R "$BASE_DIR/$SELECTED_PROJECT/" .
 
 # Do some project name related things
-DEFAULT_PROJECT_NAME=$(basename $PWD)
-read -p "Enter Project Name (default: $DEFAULT_PROJECT_NAME): " PROJECT_NAME
+REPO_NAME=$(basename $PWD)
+read -p "Enter Pretty Project Name (default: $REPO_NAME): " PROJECT_NAME
 
 # We need this awkward-ish solution because `read -i` is not available on OSX
-[ -z "$PROJECT_NAME" ] && PROJECT_NAME="$DEFAULT_PROJECT_NAME"
+[ -z "$PROJECT_NAME" ] && PROJECT_NAME="$REPO_NAME"
 
 echo "Naming Project: $PROJECT_NAME"
 sed -i "" 's/{{project-name}}/'"$PROJECT_NAME"'/g' README.md
+sed -i "" 's/{{repo-name}}/'"$REPO_NAME"'/g' README.md
 
 # Run any project/language specific install commands
 POST_INIT_SCRIPT="post-init.sh"
@@ -49,7 +50,7 @@ if [ -f "$POST_INIT_SCRIPT" ]; then
   echo
   echo "Running project specific setup..."
   # Set environment variables needed in subscript
-  PROJECT_NAME="$PROJECT_NAME" SECRETS_CACHE_DIR="$SECRETS_CACHE_DIR" \
+  REPO_NAME="$REPO_NAME" PROJECT_NAME="$PROJECT_NAME" SECRETS_CACHE_DIR="$SECRETS_CACHE_DIR" \
     sh "$POST_INIT_SCRIPT"
 
   rm "$POST_INIT_SCRIPT"
