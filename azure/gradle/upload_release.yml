@@ -1,0 +1,56 @@
+#####
+# Uploads release artifacts for a given tag
+# * Signs and uploads artifacts (jar, sources, javadoc) to sonatype staging (later synced to Maven Central)
+# * Generates a changelog with Github issues and PRs for that specific version
+# * Adds a Github release with the generated changelog and artifacts
+#####
+
+parameters:
+  vmImage: 'ubuntu 16.04'
+  jdkVersion: '1.11'
+
+jobs:
+- job: UploadRelease
+  pool:
+    vmImage: ${{ parameters.vmImage }}
+  dependsOn: Build
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
+  steps:
+  - task: DownloadSecureFile@1
+    inputs:
+      secureFile: secring.gpg
+  - task: Gradle@2
+    displayName: Upload tagged release
+    inputs: 
+      gradleWrapperFile: 'gradlew'
+      javaHomeOption: 'JDKVersion'
+      jdkVersionOption: ${{ parameters.jdkVersion }}
+      jdkArchitectureOption: 'x64'
+      publishJUnitResults: false
+      tasks: 'publishToNexus closeAndReleaseRepository -x test'
+      options: '--info --stacktrace'
+    env:
+      SIGNING_SECRET_KEY_RING_FILE: $(Agent.TempDirectory)/secring.gpg 
+      SIGNING_PASSWORD: $(signing.password)
+      SIGNING_KEY_ID: $(signing.keyId)
+      OSSRH_USERNAME: $(ossrh.username)
+      OSSRH_PASSWORD: $(ossrh.password)
+      CI: true
+  - task: Gradle@2
+    displayName: Create release changelog
+    inputs: 
+      gradleWrapperFile: 'gradlew'
+      javaHomeOption: 'JDKVersion'
+      jdkVersionOption: ${{ parameters.jdkVersion }}
+      jdkArchitectureOption: 'x64'
+      publishJUnitResults: false
+      tasks: 'generateChangelog'
+      options: '-Pchangelog.releaseVersion=$(Build.SourceVersion) -Pchangelog.sinceTag=$(Build.SourceVersion) --stacktrace --info'
+  - task: GitHubRelease@0
+    inputs:
+      gitHubConnection: 'bot'
+      repositoryName: '$(Build.Repository.Name)'
+      releaseNotesFile: 'CHANGELOG.md'
+      title: 'Release $(Build.SourceVersion)'
+      assets: '**/build/libs/*.jar'
+      addChangeLog: false

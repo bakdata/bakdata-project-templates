@@ -1,0 +1,35 @@
+#####
+# Uploads a signed snapshot to sonatype (jar, sources, javadoc)
+#####
+
+parameters:
+  vmImage: 'ubuntu 16.04'
+  jdkVersion: '1.11'
+
+jobs:
+- job: UploadSnapshot
+  pool:
+    vmImage: ${{ parameters.vmImage }}
+  dependsOn: Build
+  condition: and(succeeded(), eq(variables['release.version'], ''), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  steps:
+  - task: DownloadSecureFile@1
+    inputs:
+      secureFile: secring.gpg
+  - task: Gradle@2
+    displayName: Upload snapshot
+    inputs: 
+      gradleWrapperFile: 'gradlew'
+      javaHomeOption: 'JDKVersion'
+      jdkVersionOption: ${{ parameters.jdkVersion }}
+      jdkArchitectureOption: 'x64'
+      publishJUnitResults: false
+      tasks: 'publishToNexus -x test'
+      options: '--info --stacktrace'
+    env:
+      SIGNING_SECRET_KEY_RING_FILE: $(Agent.TempDirectory)/secring.gpg 
+      SIGNING_PASSWORD: $(signing.password)
+      SIGNING_KEY_ID: $(signing.keyId)
+      OSSRH_USERNAME: $(ossrh.username)
+      OSSRH_PASSWORD: $(ossrh.password)
+      CI: true

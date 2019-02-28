@@ -1,0 +1,63 @@
+#####
+# Creates a build including
+# * Testing if it compiles
+# * Tests run (extracting JUnit results)
+# * Code quality with sonarcloud
+# * Checks if artifacts (jar, sources, javadoc) can be built and signed
+#####
+
+parameters:
+  vmImage: 'ubuntu 16.04'
+  jdkVersion: '1.11'
+
+jobs:
+- job: Build
+  pool:
+    vmImage: ${{ parameters.vmImage }}
+  steps:
+  - task: Gradle@2
+    displayName: Compile
+    inputs: 
+      gradleWrapperFile: 'gradlew'
+      javaHomeOption: 'JDKVersion'
+      jdkVersionOption: ${{ parameters.jdkVersion }}
+      jdkArchitectureOption: 'x64'
+      publishJUnitResults: false
+      tasks: 'jar'
+      options: '--info --stacktrace'
+  - task: Gradle@2
+    displayName: Run tests
+    inputs: 
+      gradleWrapperFile: 'gradlew'
+      javaHomeOption: 'JDKVersion'
+      jdkVersionOption: ${{ parameters.jdkVersion }}
+      jdkArchitectureOption: 'x64'
+      tasks: 'build'
+      options: '--info --stacktrace'
+  - task: Gradle@2
+    displayName: Assess code quality
+    inputs: 
+      gradleWrapperFile: 'gradlew'
+      javaHomeOption: 'JDKVersion'
+      jdkVersionOption: ${{ parameters.jdkVersion }}
+      jdkArchitectureOption: 'x64'
+      tasks: 'sonarqube'
+      options: '-Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=bakdata --info --stacktrace'
+    env:
+      SONAR_TOKEN: $(sonar_token)
+  - task: DownloadSecureFile@1
+    inputs:
+      secureFile: secring.gpg
+  - task: Gradle@2
+    displayName: Check if everything builds (incl. javadoc) for snapshot/release and signing works
+    inputs: 
+      gradleWrapperFile: 'gradlew'
+      javaHomeOption: 'JDKVersion'
+      jdkVersionOption: ${{ parameters.jdkVersion }}
+      jdkArchitectureOption: 'x64'
+      tasks: 'sign'
+      options: '--info --stacktrace'
+    env:
+      SIGNING_SECRET_KEY_RING_FILE: $(Agent.TempDirectory)/secring.gpg 
+      SIGNING_PASSWORD: $(signing.password)
+      SIGNING_KEY_ID: $(signing.keyId)
