@@ -20,7 +20,7 @@ BASE_DIR="$DUMMY_DIR/bakdata-project-templates-$GIT_BRANCH"
 
 echo "Select the project type to create:"
 while [ -z "$SELECTED_PROJECT" ]; do
-  select SELECTED_PROJECT in $(cd $BASE_DIR && ls -d */);
+  select SELECTED_PROJECT in $(cd $BASE_DIR && ls -d templates/*/);
   do
     break;
   done
