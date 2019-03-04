@@ -1,12 +1,7 @@
 plugins {
-    // kotlin stuff
-    `kotlin-dsl`
-    // release
     id("net.researchgate.release") version "2.6.0"
-    // eat your own dog food - apply the plugins to this plugin project
-    id("com.bakdata.sonar") version "1.0.0"
-    id("com.bakdata.sonatype") version "1.0.0"
-    id("io.franzbecker.gradle-lombok") version "1.14"
+    id("com.bakdata.sonar") version "1.1.4"
+    id("com.bakdata.sonatype") version "1.1.4"
     id("org.hildan.github.changelog") version "0.8.0"
 }
 
@@ -41,11 +36,6 @@ configure<org.hildan.github.changelog.plugin.GitHubChangelogExtension> {
 
 subprojects {
     apply(plugin = "java-library")
-    apply(plugin = "io.franzbecker.gradle-lombok")
-    lombok {
-        version = "1.18.4"
-        sha256 = ""
-    }
 
     configure<JavaPluginConvention> {
         sourceCompatibility = org.gradle.api.JavaVersion.VERSION_11
@@ -53,11 +43,14 @@ subprojects {
     }
 
     dependencies {
-        implementation(group = "com.google.guava", name = "guava", version = "26.0-jre")
+        "testImplementation"("org.junit.jupiter:junit-jupiter-api:5.3.0")
+        "testRuntimeOnly"("org.junit.jupiter:junit-jupiter-engine:5.3.0")
+        "testImplementation"(group = "org.assertj", name = "assertj-core", version = "3.11.1")
 
-        testImplementation(group = "org.junit.jupiter", name = "junit-jupiter-api", version = "5.3.0")
-        testRuntimeOnly(group = "org.junit.jupiter", name = "junit-jupiter-engine", version = "5.3.0")
-        testImplementation(group = "org.assertj", name = "assertj-core", version = "3.11.1")
+        "compileOnly"("org.projectlombok:lombok:1.18.6")
+        "annotationProcessor"("org.projectlombok:lombok:1.18.6")
+        "testCompileOnly"("org.projectlombok:lombok:1.18.6")
+        "testAnnotationProcessor"("org.projectlombok:lombok:1.18.6")
     }
 }
 

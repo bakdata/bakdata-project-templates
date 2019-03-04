@@ -55,7 +55,7 @@ jobs:
       javaHomeOption: 'JDKVersion'
       jdkVersionOption: ${{ parameters.jdkVersion }}
       jdkArchitectureOption: 'x64'
-      tasks: 'sign'
+      tasks: 'signSonatypePublication'
       options: '--info --stacktrace'
     env:
       SIGNING_SECRET_KEY_RING_FILE: $(Agent.TempDirectory)/secring.gpg 
