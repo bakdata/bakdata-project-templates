@@ -3,11 +3,13 @@
 # * Signs and uploads artifacts (jar, sources, javadoc) to sonatype staging (later synced to Maven Central)
 # * Generates a changelog with Github issues and PRs for that specific version
 # * Adds a Github release with the generated changelog and artifacts
+# * Optionally publish to gradle plugin portal
 #####
 
 parameters:
   vmImage: 'ubuntu 16.04'
   jdkVersion: '1.11'
+  plugin: 'false'
 
 jobs:
 - job: UploadRelease
@@ -54,3 +56,22 @@ jobs:
       title: 'Release $(Build.SourceVersion)'
       assets: '**/build/libs/*.jar'
       addChangeLog: false
+
+  - ${{ if eq(parameters.plugin, 'true') }}:
+    - task: Gradle@2
+      displayName: Upload tagged release
+      inputs:
+        gradleWrapperFile: 'gradlew'
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: ${{ parameters.jdkVersion }}
+        jdkArchitectureOption: 'x64'
+        publishJUnitResults: false
+        tasks: 'publishPlugins -x test'
+        options: '--info --stacktrace'
+      env:
+        SIGNING_SECRET_KEY_RING_FILE: $(Agent.TempDirectory)/secring.gpg
+        SIGNING_PASSWORD: $(signing.password)
+        SIGNING_KEY_ID: $(signing.keyId)
+        ORG_GRADLE_PROJECT_gradle.publish.key: $(gradle.publish.key)
+        ORG_GRADLE_PROJECT_gradle.publish.secret: $(gradle.publish.secret)
+        CI: true
