@@ -47,13 +47,13 @@ jobs:
       jdkArchitectureOption: 'x64'
       publishJUnitResults: false
       tasks: 'generateChangelog'
-      options: '-Pchangelog.releaseVersion=$(Build.SourceVersion) -Pchangelog.sinceTag=$(Build.SourceVersion) --stacktrace --info'
+      options: '-Pchangelog.releaseVersion=$(Build.SourceBranchName) -Pchangelog.sinceTag=$(Build.SourceBranchName) --stacktrace --info'
   - task: GitHubRelease@0
     inputs:
       gitHubConnection: 'bot'
       repositoryName: '$(Build.Repository.Name)'
       releaseNotesFile: 'CHANGELOG.md'
-      title: 'Release $(Build.SourceVersion)'
+      title: 'Release $(Build.SourceBranchName)'
       assets: '**/build/libs/*.jar'
       addChangeLog: false
 
