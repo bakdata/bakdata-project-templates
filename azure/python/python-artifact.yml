@@ -1,7 +1,5 @@
-variables:
-- group: testpypi
 
-stages:
+
 - stage: Testing
   jobs:
   - job: 'Test'
