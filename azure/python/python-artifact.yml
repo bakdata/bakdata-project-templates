@@ -30,7 +30,7 @@ stages:
       displayName: 'Test with pytest'
 
 - stage: "Publish"
-  condition: and(succeeded(), eq(variables['release.version'], ''), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(),  ne(variables['release.version'], ''), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   pool:
     vmImage: 'ubuntu-16.04'
   jobs:
