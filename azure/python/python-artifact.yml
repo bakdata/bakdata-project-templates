@@ -66,6 +66,6 @@ stages:
         - script: flit publish
           displayName: "Publish to PyPi"
           env:
-            FLIT_USERNAME: $(testpypi.username)
-            FLIT_PASSWORD: $(testpypi.password)
+            FLIT_USERNAME: $(pypi.username)
+            FLIT_PASSWORD: $(pypi.password)
             FLIT_ROOT_INSTALL: 1
