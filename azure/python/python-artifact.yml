@@ -26,11 +26,8 @@ stages:
     - script: flit install --symlink
       displayName: 'Install library and its dependencies'
 
-    - script: pytest tests/unit
-      displayName: 'Run Unit-Testing'
-
-    - script: pytest tests/integration
-      displayName: 'Run Integration-Testing'
+    - script: pytest
+      displayName: 'Run Testing'
 
 - stage: "Publish"
   condition: and(succeeded(),  ne(variables['release.version'], ''), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
