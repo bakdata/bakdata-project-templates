@@ -26,8 +26,11 @@ stages:
     - script: flit install --symlink
       displayName: 'Install library and its dependencies'
 
-    - script: pytest
-      displayName: 'Test with pytest'
+    - script: pytest tests/unit
+      displayName: 'Run Unit-Testing'
+
+    - script: pytest tests/integration
+      displayName: 'Run Integration-Testing'
 
 - stage: "Publish"
   condition: and(succeeded(),  ne(variables['release.version'], ''), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -66,6 +69,7 @@ stages:
         - script: flit publish
           displayName: "Publish to PyPi"
           env:
+            FLIT_INDEX_URL: $(pypi.url)
             FLIT_USERNAME: $(pypi.username)
             FLIT_PASSWORD: $(pypi.password)
             FLIT_ROOT_INSTALL: 1
