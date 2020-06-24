@@ -63,6 +63,10 @@ stages:
         - script: git push --follow-tags origin master
           displayName: "Pushing tag to github"
 
+        - script: echo $(testpypi.username)
+          displayName: "Testing username"
+
+
         - script: flit publish
           displayName: "Publish to PyPi"
           env:
