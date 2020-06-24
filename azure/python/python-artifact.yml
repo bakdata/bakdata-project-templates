@@ -30,7 +30,7 @@ stages:
       displayName: 'Run Testing'
 
 - stage: "Publish"
-  condition: and(succeeded(),  ne(variables['release.version'], ''), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(),  ne(variables['release.version'], ''), eq(variables['Build.SourceBranch'], 'refs/heads/improvements_template'))
   pool:
     vmImage: 'ubuntu-16.04'
   jobs:
