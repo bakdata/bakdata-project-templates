@@ -69,8 +69,7 @@ stages:
         - script: echo $(testpypi.username)
           displayName: "Testing username"
 
-
-        - script: flit publish
+        - script: flit publish --debug
           displayName: "Publish to PyPi"
           env:
             FLIT_INDEX_URL: $(testpypi.url)
