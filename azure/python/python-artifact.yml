@@ -44,6 +44,9 @@ stages:
           inputs:
             versionSpec: '3.8'
 
+        - script: pip install pip --upgrade
+          displayName: "Upgrade pip"
+
         - script: pip install flit
           displayName: "Install flit"
 
