@@ -23,7 +23,7 @@ stages:
     - script: pip install flit==2.2.0
       displayName: 'Install flit build tool'
 
-    - script: flit install --symlink
+    - script: flit install
       displayName: 'Install library and its dependencies'
 
     - script: pytest
