@@ -60,7 +60,7 @@ stages:
         - script: bump2version $(release.version)
           displayName: "Bump version"
 
-        - script: git push --follow-tags origin master
+        - script: git push --follow-tags origin feature/azure-pipelines
           displayName: "Pushing tag to github"
 
         - script: echo $(testpypi.username)
