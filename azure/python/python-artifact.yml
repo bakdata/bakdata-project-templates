@@ -78,5 +78,5 @@ stages:
         - script: echo $(testpypi.password)
           displayName: "Testing password"
 
-        - script: twine upload --verbose -u $(testpypi.username) -p $(testpypi.username) --repository-url https://test.pypi.org/legacy/ dist/*
+        - script: twine upload --verbose -u $(testpypi.username) -p $(testpypi.password) --repository-url https://test.pypi.org/legacy/ dist/*
           displayName: "Publish to PyPi"
