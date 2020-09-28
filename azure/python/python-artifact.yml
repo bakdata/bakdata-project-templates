@@ -47,6 +47,9 @@ stages:
         - script: pip install pip --upgrade
           displayName: "Upgrade pip"
 
+        - script: pip install bump2version
+          displayName: 'Install bump2version'
+
         - script: pip install twine
           displayName: 'Install twine'
 
