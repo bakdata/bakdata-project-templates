@@ -27,7 +27,7 @@ stages:
       displayName: 'Install library and its dependencies'
 
     - script: pytest
-      displayName: 'Run Testing'
+      displayName: 'Run tests'
 
 - stage: "Publish"
   condition: and(succeeded(),  ne(variables['release.version'], ''), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
