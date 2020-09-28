@@ -20,7 +20,7 @@ stages:
       inputs:
         versionSpec: '$(python.version)'
 
-    - script: pip install flit==2.3.0
+    - script: pip install flit
       displayName: 'Install flit build tool'
 
     - script: flit install
@@ -47,7 +47,7 @@ stages:
         - script: pip install pip --upgrade
           displayName: "Upgrade pip"
 
-        - script: pip install flit==2.3.0
+        - script: pip install flit
           displayName: "Install flit"
 
         - script: flit install
