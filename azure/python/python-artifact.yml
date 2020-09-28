@@ -30,7 +30,7 @@ stages:
       displayName: 'Run Testing'
 
 - stage: "Publish"
-  condition: and(succeeded(),  ne(variables['release.version'], ''), eq(variables['Build.SourceBranch'], 'refs/heads/feature/azure-pipelines'))
+  condition: and(succeeded(),  ne(variables['release.version'], ''), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   pool:
     vmImage: 'ubuntu-16.04'
   jobs:
@@ -57,7 +57,7 @@ stages:
             git config user.email "31185348+bakdata-bot@users.noreply.github.com"
             git config user.name "bakdata-bot"
             git fetch
-            git checkout feature/azure-pipelines
+            git checkout master
           displayName: "Setting GitHub author"
 
         - script: bump2version $(release.version)
@@ -66,13 +66,13 @@ stages:
         - script: flit build
           displayName: "Build library"
 
-        - script: git push --follow-tags origin feature/azure-pipelines
+        - script: git push --follow-tags origin master
           displayName: "Pushing tag to github"
 
         - script: flit publish 
           displayName: "Publish to PyPi"
           env:
-            FLIT_INDEX_URL: $(testpypi.url)
-            FLIT_USERNAME: $(testpypi.username)
-            FLIT_PASSWORD: $(testpypi.password)
+            FLIT_INDEX_URL: $(pypi.url)
+            FLIT_USERNAME: $(pypi.username)
+            FLIT_PASSWORD: $(pypi.password)
             FLIT_ROOT_INSTALL: 1
