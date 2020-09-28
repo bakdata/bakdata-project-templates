@@ -23,11 +23,11 @@ stages:
     - script: pip install flit
       displayName: 'Install flit build tool'
 
-    - script: flit install --symlink
+    - script: flit install
       displayName: 'Install library and its dependencies'
 
     - script: pytest
-      displayName: 'Test with pytest'
+      displayName: 'Run tests'
 
 - stage: "Publish"
   condition: and(succeeded(),  ne(variables['release.version'], ''), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -42,13 +42,16 @@ stages:
 
         - task: UsePythonVersion@0
           inputs:
-            versionSpec: '3.8'
+            versionSpec: '3.7'
+
+        - script: pip install pip --upgrade
+          displayName: "Upgrade pip"
 
         - script: pip install flit
-          displayName: "Install flit"
+          displayName: 'Install flit'
 
         - script: flit install
-          displayName: "Install library"
+          displayName: 'Install library'
 
         - script: |
             git config user.email "31185348+bakdata-bot@users.noreply.github.com"
@@ -60,12 +63,16 @@ stages:
         - script: bump2version $(release.version)
           displayName: "Bump version"
 
+        - script: flit build
+          displayName: "Build library"
+
         - script: git push --follow-tags origin master
           displayName: "Pushing tag to github"
 
-        - script: flit publish
+        - script: flit publish 
           displayName: "Publish to PyPi"
           env:
+            FLIT_INDEX_URL: $(pypi.url)
             FLIT_USERNAME: $(pypi.username)
             FLIT_PASSWORD: $(pypi.password)
             FLIT_ROOT_INSTALL: 1
