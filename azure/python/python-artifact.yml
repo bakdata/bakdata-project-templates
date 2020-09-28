@@ -20,7 +20,7 @@ stages:
       inputs:
         versionSpec: '$(python.version)'
 
-    - script: pip install flit==2.2.0
+    - script: pip install flit
       displayName: 'Install flit build tool'
 
     - script: flit install
@@ -50,8 +50,11 @@ stages:
         - script: pip install flit
           displayName: "Install flit"
 
-        - script: flit install
-          displayName: "Install library"
+        - script: pip install twine
+          displayName: 'Install twine'
+
+        - script: flit build
+          displayName: "Build library"
 
         - script: |
             git config user.email "31185348+bakdata-bot@users.noreply.github.com"
@@ -69,10 +72,9 @@ stages:
         - script: echo $(testpypi.username)
           displayName: "Testing username"
 
-        - script: flit --debug publish 
+        - script: twine upload dist/*
           displayName: "Publish to PyPi"
           env:
-            FLIT_INDEX_URL: $(testpypi.url)
-            FLIT_USERNAME: $(testpypi.username)
-            FLIT_PASSWORD: $(tespypi.password)
-            FLIT_ROOT_INSTALL: 1
+            TWINE_REPOSITORY_URL: $(testpypi.url)
+            TWINE_USERNAME: $(testpypi.username)
+            TWINE_PASSWORD: $(tespypi.password)
