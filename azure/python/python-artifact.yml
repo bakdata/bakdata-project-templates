@@ -47,14 +47,8 @@ stages:
         - script: pip install pip --upgrade
           displayName: "Upgrade pip"
 
-        - script: pip install flit
-          displayName: "Install flit"
-
         - script: pip install twine
           displayName: 'Install twine'
-
-        - script: flit build
-          displayName: "Build library"
 
         - script: |
             git config user.email "31185348+bakdata-bot@users.noreply.github.com"
@@ -65,6 +59,9 @@ stages:
 
         - script: bump2version $(release.version)
           displayName: "Bump version"
+
+        - script: flit build
+          displayName: "Build library"
 
         - script: git push --follow-tags origin feature/azure-pipelines
           displayName: "Pushing tag to github"
