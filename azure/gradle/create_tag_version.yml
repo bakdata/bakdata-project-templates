@@ -68,7 +68,7 @@ jobs:
       jdkVersionOption: '1.11'
       jdkArchitectureOption: 'x64'
       publishJUnitResults: false
-      tasks: 'release'
+      tasks: 'release -x test'
       options: '-Prelease.useAutomaticVersion=true -Prelease.releaseVersion=$(version) --stacktrace --info'
     env:
       CI: true
