@@ -40,7 +40,7 @@ jobs:
       CI: true
   - ${{ if eq(parameters.plugin, 'true') }}:
     - task: Gradle@2
-      displayName: Upload tagged release
+      displayName: Upload tagged plugin release
       inputs:
         gradleWrapperFile: 'gradlew'
         javaHomeOption: 'JDKVersion'
