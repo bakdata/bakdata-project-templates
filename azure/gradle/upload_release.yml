@@ -38,6 +38,22 @@ jobs:
       OSSRH_USERNAME: $(ossrh.username)
       OSSRH_PASSWORD: $(ossrh.password)
       CI: true
+  - ${{ if eq(parameters.plugin, 'true') }}:
+    - task: Gradle@2
+      displayName: Upload tagged release
+      inputs:
+        gradleWrapperFile: 'gradlew'
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: ${{ parameters.jdkVersion }}
+        jdkArchitectureOption: 'x64'
+        publishJUnitResults: false
+        tasks: 'publishPlugins -x test'
+        options: '--info --stacktrace -Pgradle.publish.key=$(gradle.publish.key) -Pgradle.publish.secret=$(gradle.publish.secret)'
+      env:
+        SIGNING_SECRET_KEY_RING_FILE: $(Agent.TempDirectory)/secring.gpg
+        SIGNING_PASSWORD: $(signing.password)
+        SIGNING_KEY_ID: $(signing.keyId)
+        CI: true
   - task: Gradle@2
     displayName: Create release changelog
     inputs: 
@@ -56,22 +72,3 @@ jobs:
       title: 'Release $(Build.SourceBranchName)'
       assets: '**/build/libs/*.jar'
       addChangeLog: false
-
-  - ${{ if eq(parameters.plugin, 'true') }}:
-    - task: Gradle@2
-      displayName: Upload tagged release
-      inputs:
-        gradleWrapperFile: 'gradlew'
-        javaHomeOption: 'JDKVersion'
-        jdkVersionOption: ${{ parameters.jdkVersion }}
-        jdkArchitectureOption: 'x64'
-        publishJUnitResults: false
-        tasks: 'publishPlugins -x test'
-        options: '--info --stacktrace'
-      env:
-        SIGNING_SECRET_KEY_RING_FILE: $(Agent.TempDirectory)/secring.gpg
-        SIGNING_PASSWORD: $(signing.password)
-        SIGNING_KEY_ID: $(signing.keyId)
-        ORG_GRADLE_PROJECT_gradle.publish.key: $(gradle.publish.key)
-        ORG_GRADLE_PROJECT_gradle.publish.secret: $(gradle.publish.secret)
-        CI: true
