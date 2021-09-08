@@ -7,7 +7,7 @@
 #####
 
 parameters:
-  vmImage: 'ubuntu 20.04'
+  vmImage: 'ubuntu-20.04'
   jdkVersion: '1.11'
 
 jobs:
