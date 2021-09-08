@@ -24,6 +24,9 @@ stages:
     - script: flit install
       displayName: 'Install library and its dependencies'
 
+    - script: pip install --upgrade --no-cache localstack localstack-client localstack-ext
+      displayName: Upgrade localstack
+
     - script: pytest
       displayName: 'Run tests'
 
