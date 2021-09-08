@@ -3,7 +3,7 @@ stages:
   jobs:
   - job: 'Test'
     pool:
-      vmImage: 'ubuntu-18.04'
+      vmImage: 'ubuntu 20.04'
     strategy:
       matrix:
         Python36:
@@ -30,7 +30,7 @@ stages:
 - stage: "Publish"
   condition: and(succeeded(),  ne(variables['release.version'], ''), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
   pool:
-    vmImage: 'ubuntu-18.04'
+    vmImage: 'ubuntu 20.04'
   jobs:
     - job: "PublishPyPi"
       steps:
