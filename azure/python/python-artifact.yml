@@ -24,9 +24,6 @@ stages:
     - script: flit install
       displayName: 'Install library and its dependencies'
 
-    - script: systemctl disable systemd-resolved && systemctl stop systemd-resolved
-      displayName: Disable system DNS
-
     - script: pytest
       displayName: 'Run tests'
 
