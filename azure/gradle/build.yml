@@ -10,6 +10,10 @@ parameters:
   vmImage: 'ubuntu-20.04'
   jdkVersion: '1.11'
 
+variables:
+  - name: repositoryName
+    value: $(Build.repository.name)
+
 jobs:
 - job: Build
   pool:
@@ -36,7 +40,8 @@ jobs:
       options: '--info --stacktrace'
   - task: Gradle@2
     displayName: Assess code quality
-    inputs: 
+    inputs:
+      script: echo '$(repositoryName)'
       gradleWrapperFile: 'gradlew'
       javaHomeOption: 'JDKVersion'
       jdkVersionOption: ${{ parameters.jdkVersion }}
