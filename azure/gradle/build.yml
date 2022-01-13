@@ -34,6 +34,12 @@ jobs:
       jdkArchitectureOption: 'x64'
       tasks: 'build'
       options: '--info --stacktrace'
+  # Publish Test Results
+  # Publish test results to Azure Pipelines
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
+      testResultsFiles: '**/TEST-*.xml'
   - task: Gradle@2
     displayName: Assess code quality
     inputs: 
