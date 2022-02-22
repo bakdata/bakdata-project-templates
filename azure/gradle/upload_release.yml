@@ -16,28 +16,28 @@ jobs:
   pool:
     vmImage: ${{ parameters.vmImage }}
   dependsOn: Build
-  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
+  #condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
   steps:
   - task: DownloadSecureFile@1
     inputs:
       secureFile: secring.gpg
-  - task: Gradle@2
-    displayName: Upload tagged release
-    inputs: 
-      gradleWrapperFile: 'gradlew'
-      javaHomeOption: 'JDKVersion'
-      jdkVersionOption: ${{ parameters.jdkVersion }}
-      jdkArchitectureOption: 'x64'
-      publishJUnitResults: false
-      tasks: 'publishToNexus closeAndReleaseRepository -x test'
-      options: '--info --stacktrace'
-    env:
-      SIGNING_SECRET_KEY_RING_FILE: $(Agent.TempDirectory)/secring.gpg 
-      SIGNING_PASSWORD: $(signing.password)
-      SIGNING_KEY_ID: $(signing.keyId)
-      OSSRH_USERNAME: $(ossrh.username)
-      OSSRH_PASSWORD: $(ossrh.password)
-      CI: true
+  #- task: Gradle@2
+    #displayName: Upload tagged release
+    #inputs: 
+      #gradleWrapperFile: 'gradlew'
+      #javaHomeOption: 'JDKVersion'
+      #jdkVersionOption: ${{ parameters.jdkVersion }}
+      #jdkArchitectureOption: 'x64'
+      #publishJUnitResults: false
+      #tasks: 'publishToNexus closeAndReleaseRepository -x test'
+      #options: '--info --stacktrace'
+    #env:
+      #SIGNING_SECRET_KEY_RING_FILE: $(Agent.TempDirectory)/secring.gpg 
+      #SIGNING_PASSWORD: $(signing.password)
+      #SIGNING_KEY_ID: $(signing.keyId)
+      #OSSRH_USERNAME: $(ossrh.username)
+      #OSSRH_PASSWORD: $(ossrh.password)
+      #CI: true
   - ${{ if eq(parameters.plugin, 'true') }}:
     - task: Gradle@2
       displayName: Upload tagged plugin release
@@ -54,21 +54,21 @@ jobs:
         SIGNING_PASSWORD: $(signing.password)
         SIGNING_KEY_ID: $(signing.keyId)
         CI: true
-  - task: Gradle@2
-    displayName: Create release changelog
-    inputs: 
-      gradleWrapperFile: 'gradlew'
-      javaHomeOption: 'JDKVersion'
-      jdkVersionOption: ${{ parameters.jdkVersion }}
-      jdkArchitectureOption: 'x64'
-      publishJUnitResults: false
-      tasks: 'generateChangelog'
-      options: '-Pchangelog.releaseVersion=$(Build.SourceBranchName) -Pchangelog.sinceTag=$(Build.SourceBranchName) --stacktrace --info'
-  - task: GitHubRelease@0
-    inputs:
-      gitHubConnection: 'bot'
-      repositoryName: '$(Build.Repository.Name)'
-      releaseNotesFile: 'CHANGELOG.md'
-      title: 'Release $(Build.SourceBranchName)'
-      assets: '**/build/libs/*.jar'
-      addChangeLog: false
+#- task: Gradle@2
+    #displayName: Create release changelog
+    #inputs: 
+      #gradleWrapperFile: 'gradlew'
+      #javaHomeOption: 'JDKVersion'
+      #jdkVersionOption: ${{ parameters.jdkVersion }}
+      #jdkArchitectureOption: 'x64'
+      #publishJUnitResults: false
+      #tasks: 'generateChangelog'
+      #options: '-Pchangelog.releaseVersion=$(Build.SourceBranchName) -Pchangelog.sinceTag=$(Build.SourceBranchName) --stacktrace --info'
+  #- task: GitHubRelease@0
+    #inputs:
+      #gitHubConnection: 'bot'
+      #repositoryName: '$(Build.Repository.Name)'
+      #releaseNotesFile: 'CHANGELOG.md'
+      #title: 'Release $(Build.SourceBranchName)'
+      #assets: '**/build/libs/*.jar'
+      #addChangeLog: false
