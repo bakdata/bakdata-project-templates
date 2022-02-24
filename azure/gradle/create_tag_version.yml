@@ -16,7 +16,7 @@ jobs:
     vmImage: ${{ parameters.vmImage }}
   dependsOn: Build
   # when manually run with overridden release.version
-  condition: and(succeeded(), ne(variables['release.version'], ''), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(), ne(variables['release.version'], ''), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/main')))
   steps:
   - checkout: self
     persistCredentials: true
@@ -52,8 +52,8 @@ jobs:
       git config user.name "bakdata-bot"
       # check if we are really on HEAD of master
       git fetch 
-      if [[ `git rev-list HEAD...origin/master --count` > 0 ]]; then exit 1; fi
-      git checkout master
+      if [[ `git rev-list HEAD...origin/$(Build.SourceBranchName) --count` > 0 ]]; then exit 1; fi
+      git checkout $(Build.SourceBranchName)
       # add commit and push to master
       git add CHANGELOG.md
       git commit -m "Changelog for version $(version)"
