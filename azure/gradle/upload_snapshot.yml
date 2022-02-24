@@ -11,7 +11,7 @@ jobs:
   pool:
     vmImage: ${{ parameters.vmImage }}
   dependsOn: Build
-  condition: and(succeeded(), eq(variables['release.version'], ''), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  condition: and(succeeded(), eq(variables['release.version'], ''), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/main')))
   steps:
   - task: DownloadSecureFile@1
     inputs:
