@@ -43,8 +43,8 @@ jobs:
         jdkVersionOption: ${{ parameters.jdkVersion }}
         jdkArchitectureOption: 'x64'
         publishJUnitResults: false
-        tasks: 'jibBuildTar -x test'
-        options: '--info --image=bakdata/$(Build.Repository.Name):$(Build.BuildNumber)'
+        tasks: 'jibBuildTar --image=bakdata/$(Build.Repository.Name):$(Build.BuildNumber) -x test'
+        options: '--info'
 
     - script: docker load --input $(workingDirectory)/build/jib-image.tar
       displayName: Load image to docker
