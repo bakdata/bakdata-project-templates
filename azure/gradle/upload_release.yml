@@ -12,12 +12,6 @@ parameters:
   plugin: 'false'
   docker: 'false'
 
-variables:
-  - name: dockerRegistryServiceConnection
-    value: docker_hub
-  - name: dockerDefaultImageTag
-    value: $(Build.BuildId)-$(Build.SourceVersion)
-
 jobs:
 - job: UploadRelease
   pool:
