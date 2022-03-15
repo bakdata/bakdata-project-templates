@@ -5,13 +5,14 @@
 parameters:
   vmImage: 'ubuntu-20.04'
   jdkVersion: '1.11'
+  docker: 'false'
 
 jobs:
 - job: UploadSnapshot
   pool:
     vmImage: ${{ parameters.vmImage }}
   dependsOn: Build
-  #condition: and(succeeded(), eq(variables['release.version'], ''), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+  #condition: and(succeeded(), eq(variables['release.version'], ''), or(eq(variables['Build.SourceBranch'], 'refs/heads/master'), eq(variables['Build.SourceBranch'], 'refs/heads/main')))
   steps:
   - task: DownloadSecureFile@1
     inputs:
@@ -33,3 +34,25 @@ jobs:
       OSSRH_USERNAME: $(ossrh.username)
       OSSRH_PASSWORD: $(ossrh.password)
       CI: true
+  - ${{ if eq(parameters.docker, 'true') }}:
+    - task: Gradle@2
+      displayName: Build docker image
+      inputs:
+        gradleWrapperFile: 'gradlew'
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: ${{ parameters.jdkVersion }}
+        jdkArchitectureOption: 'x64'
+        publishJUnitResults: false
+        tasks: 'jibBuildTar -x test'
+        options: '--info --image=bakdata/$(Build.Repository.Name):$(Build.BuildNumber)'
+
+    - script: docker load --input $(workingDirectory)/build/jib-image.tar
+      displayName: Load image to docker
+
+    - task: Docker@2
+      displayName: Publish docker
+      inputs:
+        command: push
+        repository: $(Build.Repository.Name)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: $(Build.BuildNumber)

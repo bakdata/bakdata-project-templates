@@ -10,6 +10,13 @@ parameters:
   vmImage: 'ubuntu-20.04'
   jdkVersion: '1.11'
   plugin: 'false'
+  docker: 'false'
+
+variables:
+  - name: dockerRegistryServiceConnection
+    value: docker_hub
+  - name: dockerDefaultImageTag
+    value: $(Build.BuildId)-$(Build.SourceVersion)
 
 jobs:
 - job: UploadRelease
@@ -54,6 +61,30 @@ jobs:
         SIGNING_PASSWORD: $(signing.password)
         SIGNING_KEY_ID: $(signing.keyId)
         CI: true
+  - ${{ if eq(parameters.docker, 'true') }}:
+    - task: Gradle@2
+      displayName: Build docker image
+      inputs:
+        gradleWrapperFile: 'gradlew'
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: ${{ parameters.jdkVersion }}
+        jdkArchitectureOption: 'x64'
+        publishJUnitResults: false
+        tasks: 'jibBuildTar -x test'
+        options: '--info --image=bakdata/$(Build.Repository.Name):$(Build.SourceBranchName)'
+
+    - script: docker load --input $(workingDirectory)/build/jib-image.tar
+      displayName: Load image to docker
+
+    - task: Docker@2
+      displayName: Publish docker
+      inputs:
+        command: push
+        repository: $(Build.Repository.Name)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(Build.SourceBranchName)
+          latest
   - task: Gradle@2
     displayName: Create release changelog
     inputs: 
