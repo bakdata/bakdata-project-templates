@@ -53,7 +53,7 @@ jobs:
         tasks: 'jibBuildTar --image=bakdata/$(Build.Repository.Name):$(Build.BuildNumber) -x test'
         options: '--info'
 
-    - publish: $(workingDirectory)/build/jib-image.tar
+    - publish: $(System.DefaultWorkingDirectory)/build/jib-image.tar
       artifact: tarImage
       displayName: Upload jib image
   - task: Gradle@2
