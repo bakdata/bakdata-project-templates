@@ -40,9 +40,6 @@ jobs:
       displayName: Download jib image
     - script: docker load --input $(Pipeline.Workspace)/tarImage/jib-image.tar
       displayName: Load image to docker
-    - script: docker tag $(Build.Repository.Name):$(Build.BuildId) $(Build.Repository.Name):$(Build.SourceBranchName)
-      displayName: Tag release name
-
     - task: Docker@2
       displayName: Publish docker
       inputs:
