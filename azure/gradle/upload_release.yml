@@ -61,9 +61,9 @@ jobs:
       displayName: Download jib image
     - script: docker load --input $(Pipeline.Workspace)/tarImage/jib-image.tar
       displayName: Load image to docker
-    - script: docker tag bakdata/$(Build.Repository.Name):$(Build.BuildNumber) bakdata/$(Build.Repository.Name):$(Build.SourceBranchName)
+    - script: docker tag $(Build.Repository.Name):$(Build.BuildNumber) $(Build.Repository.Name):$(Build.SourceBranchName)
       displayName: Tag
-    - script: docker tag bakdata/$(Build.Repository.Name):$(Build.BuildNumber) bakdata/$(Build.Repository.Name):latest
+    - script: docker tag $(Build.Repository.Name):$(Build.BuildNumber) $(Build.Repository.Name):latest
       displayName: Tag latest
     - task: Docker@2
       displayName: Publish docker

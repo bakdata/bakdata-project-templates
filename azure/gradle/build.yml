@@ -50,7 +50,7 @@ jobs:
         jdkVersionOption: ${{ parameters.jdkVersion }}
         jdkArchitectureOption: 'x64'
         publishJUnitResults: false
-        tasks: 'jibBuildTar --image=bakdata/$(Build.Repository.Name):$(Build.BuildNumber) -x test'
+        tasks: 'jibBuildTar --image=$(Build.Repository.Name):$(Build.BuildNumber) -x test'
         options: '--info'
 
     - publish: $(System.DefaultWorkingDirectory)/build/jib-image.tar
