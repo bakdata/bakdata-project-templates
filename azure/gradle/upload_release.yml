@@ -56,20 +56,15 @@ jobs:
         SIGNING_KEY_ID: $(signing.keyId)
         CI: true
   - ${{ if eq(parameters.docker, 'true') }}:
-    - task: Gradle@2
-      displayName: Build docker image
-      inputs:
-        gradleWrapperFile: 'gradlew'
-        javaHomeOption: 'JDKVersion'
-        jdkVersionOption: ${{ parameters.jdkVersion }}
-        jdkArchitectureOption: 'x64'
-        publishJUnitResults: false
-        tasks: 'jibBuildTar --image=bakdata/$(Build.Repository.Name):$(Build.SourceBranchName) -x test'
-        options: '--info'
-
-    - script: docker load --input $(workingDirectory)/build/jib-image.tar
+    - download: current
+      artifact: tarImage
+      displayName: Download jib image
+    - script: docker load --input $(Pipeline.Workspace)/tarImage/jib-image.tar
       displayName: Load image to docker
-
+    - script: docker tag bakdata/$(Build.Repository.Name):$(Build.BuildNumber) bakdata/$(Build.Repository.Name):$(Build.SourceBranchName)
+      displayName: Tag
+    - script: docker tag bakdata/$(Build.Repository.Name):$(Build.BuildNumber) bakdata/$(Build.Repository.Name):latest
+      displayName: Tag latest
     - task: Docker@2
       displayName: Publish docker
       inputs:

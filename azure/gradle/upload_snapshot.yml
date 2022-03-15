@@ -35,18 +35,10 @@ jobs:
       OSSRH_PASSWORD: $(ossrh.password)
       CI: true
   - ${{ if eq(parameters.docker, 'true') }}:
-    - task: Gradle@2
-      displayName: Build docker image
-      inputs:
-        gradleWrapperFile: 'gradlew'
-        javaHomeOption: 'JDKVersion'
-        jdkVersionOption: ${{ parameters.jdkVersion }}
-        jdkArchitectureOption: 'x64'
-        publishJUnitResults: false
-        tasks: 'jibBuildTar --image=bakdata/$(Build.Repository.Name):$(Build.BuildNumber) -x test'
-        options: '--info'
-
-    - script: docker load --input $(workingDirectory)/build/jib-image.tar
+    - download: current
+      artifact: tarImage
+      displayName: Download jib image
+    - script: docker load --input $(Pipeline.Workspace)/tarImage/jib-image.tar
       displayName: Load image to docker
 
     - task: Docker@2
