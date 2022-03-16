@@ -9,6 +9,7 @@
 parameters:
   vmImage: 'ubuntu-20.04'
   jdkVersion: '1.11'
+  docker: 'false'
 
 jobs:
 - job: Build
@@ -40,6 +41,21 @@ jobs:
     inputs:
       testResultsFormat: 'JUnit'
       testResultsFiles: '**/TEST-*.xml'
+  - ${{ if eq(parameters.docker, 'true') }}:
+    - task: Gradle@2
+      displayName: Build docker image
+      inputs:
+        gradleWrapperFile: 'gradlew'
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: ${{ parameters.jdkVersion }}
+        jdkArchitectureOption: 'x64'
+        publishJUnitResults: false
+        tasks: 'jibBuildTar --image=$(Build.Repository.Name):$(Build.BuildId) -x test'
+        options: '--info'
+
+    - publish: $(System.DefaultWorkingDirectory)/build/jib-image.tar
+      artifact: tarImage
+      displayName: Upload jib image
   - task: Gradle@2
     displayName: Assess code quality
     inputs: 

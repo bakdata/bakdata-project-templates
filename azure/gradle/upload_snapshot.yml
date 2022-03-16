@@ -5,6 +5,7 @@
 parameters:
   vmImage: 'ubuntu-20.04'
   jdkVersion: '1.11'
+  docker: 'false'
 
 jobs:
 - job: UploadSnapshot
@@ -33,3 +34,16 @@ jobs:
       OSSRH_USERNAME: $(ossrh.username)
       OSSRH_PASSWORD: $(ossrh.password)
       CI: true
+  - ${{ if eq(parameters.docker, 'true') }}:
+    - download: current
+      artifact: tarImage
+      displayName: Download jib image
+    - script: docker load --input $(Pipeline.Workspace)/tarImage/jib-image.tar
+      displayName: Load image to docker
+    - task: Docker@2
+      displayName: Publish docker
+      inputs:
+        command: push
+        repository: $(Build.Repository.Name)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: $(Build.BuildId)
