@@ -36,7 +36,7 @@ repos:
         entry: ./run_mypy.sh
         language: system
         types: [python]
-        files: ^backend/
+        files: ""
         require_serial: true # run once for all files
   - repo: local
     hooks:
