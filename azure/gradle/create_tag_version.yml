@@ -46,6 +46,8 @@ jobs:
       publishJUnitResults: false
       tasks: 'generateChangelog'
       options: '-Pchangelog.releaseVersion=$(version) --stacktrace --info'
+    env:
+      GITHUB_TOKEN: $(changelogToken)
   - script: |
       # set bot as author
       git config user.email "31185348+bakdata-bot@users.noreply.github.com"
