@@ -1,0 +1,53 @@
+---
+repos:
+  # - repo: local
+  #   hooks:
+  #     - id: eslint
+  #       name: eslint
+  #       entry: npm --prefix frontend run lint
+  #       language: system
+  #       pass_filenames: false
+  # - repo: local
+  #   hooks:
+  #     - id: dprint
+  #       name: dprint
+  #       entry: bash -c 'cd frontend && npx dprint fmt'
+  #       language: system
+  #       pass_filenames: false
+  - repo: https://github.com/pycqa/isort
+    rev: 5.10.1
+    hooks:
+      - id: isort
+        args: ["--settings", "backend/setup.cfg"]
+  - repo: https://github.com/psf/black
+    rev: 22.6.0
+    hooks:
+      - id: black
+        language_version: python3
+  - repo: https://github.com/pycqa/flake8
+    rev: 4.0.1
+    hooks:
+      - id: flake8
+        args: ["--config", "backend/setup.cfg"]
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: ./run_mypy.sh
+        language: system
+        types: [python]
+        files: ^backend/
+        require_serial: true # run once for all files
+  - repo: local
+    hooks:
+      - id: generate-fetchers
+        name: generate-fetchers
+        entry: hooks/hook_generate-fetchers.sh
+        language: script
+        pass_filenames: false
+  - repo: https://github.com/cdce8p/python-typing-update
+    rev: v0.4.2
+    hooks:
+      - id: python-typing-update
+        stages: [manual]
+        args: ["--py310-plus"]
