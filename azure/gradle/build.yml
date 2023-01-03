@@ -27,6 +27,18 @@ jobs:
       tasks: 'jar'
       options: '--info --stacktrace'
   - task: Gradle@2
+    displayName: Generate changelog for $(version)
+    inputs: 
+      gradleWrapperFile: 'gradlew'
+      javaHomeOption: 'JDKVersion'
+      jdkVersionOption: ${{ parameters.jdkVersion }}
+      jdkArchitectureOption: 'x64'
+      publishJUnitResults: false
+      tasks: 'generateChangelog'
+      options: '-Pchangelog.releaseVersion=$(version) --stacktrace --info'
+    env:
+      GITHUB_TOKEN: $(changelogToken)
+  - task: Gradle@2
     displayName: Run tests
     inputs: 
       gradleWrapperFile: 'gradlew'
