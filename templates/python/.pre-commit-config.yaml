@@ -4,7 +4,7 @@ repos:
     rev: 5.10.1
     hooks:
       - id: isort
-        args: ["--settings", "backend/setup.cfg"]
+        args: ["--settings", "setup.cfg"]
   - repo: https://github.com/psf/black
     rev: 22.6.0
     hooks:
@@ -14,7 +14,7 @@ repos:
     rev: 4.0.1
     hooks:
       - id: flake8
-        args: ["--config", "backend/setup.cfg"]
+        args: ["--config", "setup.cfg"]
   - repo: local
     hooks:
       - id: mypy
