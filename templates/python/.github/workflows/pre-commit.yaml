@@ -1,0 +1,52 @@
+name: Pre-commit
+
+on:
+  push:
+    # branches: [master]
+    tags: ["v[0-9]+.[0-9]+.[0-9]+"]
+  pull_request:
+    branches: [master]
+
+jobs:
+  pre-commit:
+    name: pre-commit
+    runs-on: ubuntu-latest
+    env:
+      working-directory: ./
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.8"]
+    defaults:
+      run:
+        working-directory: ${{ env.working-directory }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      # - name: Install packages
+      #   run: sudo apt-get -y install python3-dev graphviz libgraphviz-dev pkg-config python3-wheel
+
+      - name: Set up Poetry
+        uses: bakdata/ci-templates/actions/python-setup-poetry@v1.5.1
+        with:
+          python-version: ${{ matrix.python-version }}
+          working-directory: ${{ env.working-directory }}
+
+      - name: Install dependencies
+        run: poetry install --no-interaction
+
+      - name: Lint (flake8)
+        run: poetry run pre-commit run flake8 --all-files --show-diff-on-failure
+
+      - name: Order of imports (isort)
+        run: poetry run pre-commit run isort --all-files --show-diff-on-failure
+
+      - name: Formatting (black)
+        run: poetry run pre-commit run black --all-files --show-diff-on-failure
+
+      - name: Typing (mypy)
+        run: poetry run pre-commit run mypy --all-files
+
+      - name: Test
+        run: poetry run pytest tests

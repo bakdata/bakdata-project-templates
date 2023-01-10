@@ -1,0 +1,29 @@
+name: Publish
+# Template adapted from https://github.com/bakdata/ci-templates/tree/main/.github/workflows#python-poetry-release
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+jobs:
+  setup-bump-publish:
+    name: setup-bump-publish
+    uses: bakdata/ci-templates/.github/workflows/python-poetry-release.yaml@main
+    with:
+      release-type: patch publish-to-test: true
+      python-version: 3.8
+      poetry-version: 1.1.11
+      # working-directory: "./my-awesome-python-project"
+      github-email: ${{ secrets.GH_EMAIL }}
+      github-username: ${{ secrets.GH_USERNAME }}
+      github-token: ${{ secrets.GH_TOKEN }}
+      pypi-token: ${{ secrets.TEST_PYPI_TOKEN }}
+
+  print-version:
+    name: print-version
+    runs-on: ubuntu-latest
+    needs: publish
+    steps:
+      - run: echo Bumped Version from ${{ needs.publish.outputs.old-tag }} to ${{ needs.publish.outputs.release-tag }}
