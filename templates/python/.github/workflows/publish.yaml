@@ -10,10 +10,11 @@ on:
 jobs:
   release:
     name: release
-    uses: bakdata/ci-templates/.github/workflows/python-poetry-release.yaml@main
+    uses: bakdata/ci-templates/.github/workflows/python-poetry-release.yaml@v1.13.5
     with:
-      release-type: patch publish-to-test: true
-      python-version: 3.8
+      # release-type: patch
+      publish-to-test: true
+      python-version: "3.10"
       poetry-version: 1.1.11
       # working-directory: "./my-awesome-python-project"
       github-email: ${{ secrets.GH_EMAIL }}

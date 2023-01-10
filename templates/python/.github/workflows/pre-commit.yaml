@@ -25,7 +25,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Set up Poetry
-        uses: bakdata/ci-templates/actions/python-setup-poetry@v1.5.3
+        uses: bakdata/ci-templates/actions/python-setup-poetry@v1.13.5
         with:
           python-version: ${{ matrix.python-version }}
           working-directory: ${{ env.working-directory }}
