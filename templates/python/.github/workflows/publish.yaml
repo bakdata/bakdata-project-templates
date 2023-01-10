@@ -8,8 +8,8 @@ on:
     branches: [main]
 
 jobs:
-  setup-bump-publish:
-    name: setup-bump-publish
+  release:
+    name: release
     uses: bakdata/ci-templates/.github/workflows/python-poetry-release.yaml@main
     with:
       release-type: patch publish-to-test: true
