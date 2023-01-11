@@ -2,14 +2,24 @@ name: Publish
 # Template adapted from https://github.com/bakdata/ci-templates/tree/main/.github/workflows#python-poetry-release
 
 on:
-  push:
-    tags: ["v[0-9]+.[0-9]+.[0-9]+"]
+  workflow_dispatch:
+    inputs:
+      release-type:
+        description: "Scope of the release; see https://python-poetry.org/docs/cli/#version"
+        type: choice
+        required: true
+        default: patch
+        options:
+          - patch
+          - minor
+          - major
+    
 jobs:
   release:
     name: release
     uses: bakdata/ci-templates/.github/workflows/python-poetry-release.yaml@v1.13.5
     with:
-      release-type: patch
+      release-type: ${{ github.event.inputs.release-type }}
       publish-to-test: true
       python-version: "3.10"
       # poetry-version: 1.1.11
