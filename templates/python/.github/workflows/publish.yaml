@@ -31,7 +31,7 @@ jobs:
 
   print-version:
     name: print-version
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: publish
     steps:
-      - run: echo Bumped Version from ${{ needs.publish.outputs.old-tag }} to ${{ needs.publish.outputs.release-tag }}
+      - run: echo "Bumped Version from ${{ needs.publish.outputs.old-tag }} to ${{ needs.publish.outputs.release-tag }}"
