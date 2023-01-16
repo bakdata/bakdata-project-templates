@@ -22,8 +22,9 @@ jobs:
       release-type: ${{ github.event.inputs.release-type }}
       publish-to-test: true
       python-version: "3.10"
-      # poetry-version: 1.1.11
-      # working-directory: "./my-awesome-python-project"
+      # poetry-version: 1.3.2 # workflow likely wouldn't work with poetry-version < 1.2
+      # working-directory: "./"
+    secrets:
       github-email: ${{ secrets.GH_EMAIL }}
       github-username: ${{ secrets.GH_USERNAME }}
       github-token: ${{ secrets.GH_TOKEN }}
@@ -32,6 +33,6 @@ jobs:
   print-version:
     name: print-version
     runs-on: ubuntu-22.04
-    needs: publish
+    needs: release
     steps:
       - run: echo "Bumped Version from ${{ needs.publish.outputs.old-tag }} to ${{ needs.publish.outputs.release-tag }}"
