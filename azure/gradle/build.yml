@@ -57,7 +57,7 @@ jobs:
     - publish: $(System.DefaultWorkingDirectory)/build/jib-image.tar
       artifact: tarImage
       displayName: Upload jib image
-  - ${{ if eq(parameters.plugin, 'true') }}:
+  - ${{ if eq(parameters.assessCode, 'true') }}:
     - task: Gradle@2
       displayName: Assess code quality
       inputs: 
