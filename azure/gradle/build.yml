@@ -64,7 +64,7 @@ jobs:
       jdkVersionOption: ${{ parameters.jdkVersion }}
       jdkArchitectureOption: 'x64'
       tasks: 'sonarqube'
-      options: '-Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=bakdata --info --stacktrace'
+      options: '-Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=bakdata -Dsonar.scanner.force-deprecated-java-version=true --info --stacktrace'
     env:
       SONAR_TOKEN: $(sonar_token)
   - task: DownloadSecureFile@1
