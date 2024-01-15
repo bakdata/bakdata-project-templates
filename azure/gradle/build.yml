@@ -10,6 +10,7 @@ parameters:
   vmImage: 'ubuntu-20.04'
   jdkVersion: '1.11'
   docker: 'false'
+  assessCode: 'true'
 
 jobs:
 - job: Build
@@ -56,17 +57,18 @@ jobs:
     - publish: $(System.DefaultWorkingDirectory)/build/jib-image.tar
       artifact: tarImage
       displayName: Upload jib image
-  - task: Gradle@2
-    displayName: Assess code quality
-    inputs: 
-      gradleWrapperFile: 'gradlew'
-      javaHomeOption: 'JDKVersion'
-      jdkVersionOption: ${{ parameters.jdkVersion }}
-      jdkArchitectureOption: 'x64'
-      tasks: 'sonarqube'
-      options: '-Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=bakdata -Dsonar.scanner.force-deprecated-java-version=true --info --stacktrace'
-    env:
-      SONAR_TOKEN: $(sonar_token)
+  - ${{ if eq(parameters.plugin, 'true') }}:
+    - task: Gradle@2
+      displayName: Assess code quality
+      inputs: 
+        gradleWrapperFile: 'gradlew'
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: ${{ parameters.jdkVersion }}
+        jdkArchitectureOption: 'x64'
+        tasks: 'sonarqube'
+        options: '-Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=bakdata --info --stacktrace'
+      env:
+        SONAR_TOKEN: $(sonar_token)
   - task: DownloadSecureFile@1
     inputs:
       secureFile: secring.gpg
