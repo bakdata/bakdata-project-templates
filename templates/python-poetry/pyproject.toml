@@ -23,6 +23,14 @@ pytest-cov = "^5.0.0"
 # [tool.poetry.scripts]
 # start = "main:start"
 
+[tool.ruff]
+# E203: whitespace before ':' -- Not PEP8 compliant, black won't correct it
+# E501: Line too long -- Clashes with `black`
+ignore = ["E203", "E501"]
+# For a list of all possible rules visit https://beta.ruff.rs/docs/rules/
+# Pyflakes(F), pycodestyle(E,W), mccabe(C90), isort(I), pyupgrade(UP), ruff(RUF)
+select = ["F", "E", "W", "C90", "I", "UP", "RUF"]
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
