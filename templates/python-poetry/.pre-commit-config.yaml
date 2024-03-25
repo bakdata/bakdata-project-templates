@@ -1,32 +1,32 @@
 ---
 repos:
-  - repo: https://github.com/psf/black
-    rev: 22.12.0
-    hooks:
-      - id: black
-        language_version: python3
-  - repo: https://github.com/pycqa/flake8
-    rev: 6.0.0
-    hooks:
-      - id: flake8
-        args: ["--config", "setup.cfg"]
-  - repo: https://github.com/pycqa/isort
-    rev: 5.11.4
-    hooks:
-      - id: isort
-        args: ["--settings", "setup.cfg"]
   - repo: local
     hooks:
-      - id: mypy
-        name: mypy
-        entry: ./run_mypy.sh
+      - id: ruff-lint
+        name: ruff-lint
+        entry: ruff check
+        args:
+          [
+            --force-exclude,
+            --config,
+            pyproject.toml,
+            --fix,
+            --show-fixes,
+            --exit-non-zero-on-fix,
+          ]
+        language: system
+        types_or: [python]
+        require_serial: true # run once for all files
+      - id: ruff-format
+        name: ruff-format
+        entry: ruff format
+        args: [--force-exclude, --config, pyproject.toml]
+        language: system
+        types_or: [python]
+        require_serial: true # run once for all files
+      - id: pyright
+        name: pyright
+        entry: pyright
         language: system
         types: [python]
-        files: ""
         require_serial: true # run once for all files
-  - repo: https://github.com/cdce8p/python-typing-update
-    rev: v0.5.1
-    hooks:
-      - id: python-typing-update
-        stages: [manual]
-        args: ["--py310-plus"]
