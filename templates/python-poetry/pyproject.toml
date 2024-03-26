@@ -1,15 +1,16 @@
 [tool.poetry]
 name = ""
-version = ""
+version = "0.0.0"
 description = ""
-license = ""
+license = "MIT"
 authors = ["bakdata"]
 readme = "README.md" # Could also do ["path/to/README0.md", "path/to/README1.md"]
 
-repository = ""
-documentation = ""
-keywords = []
-classifiers = []
+# TODO
+# repository = ""
+# documentation = ""
+# keywords = []
+# classifiers = []
 
 [tool.poetry.dependencies]
 python = "^3.10"
