@@ -2,10 +2,15 @@
 name = "" # TODO: set name and change {package_name} below
 version = "0.0.0"
 description = ""
-license = ""
+license = "MIT"
 authors = ["bakdata"]
 readme = "README.md" # Could also do ["path/to/README0.md", "path/to/README1.md"]
-keywords = []
+
+# TODO
+# repository = ""
+# documentation = ""
+# keywords = []
+# classifiers = []
 
 # [tool.poetry.scripts]
 # start = "main:start"
