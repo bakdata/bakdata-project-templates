@@ -38,6 +38,7 @@ ignore = [
   "E501", # Line too long
   # Rules in conflict with `ruff-format` -- END
   "RUF012", # type class attrs with `ClassVar` -- Too strict/trigger-happy
+]
 
 # For a list of all possible rules visit https://docs.astral.sh/ruff/rules/
 [tool.ruff.lint]
@@ -50,6 +51,7 @@ select = [
   "UP", # pyupgrade
   "B", # flake8-bugbear
   "RUF", # Ruff-specific rules
+]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
