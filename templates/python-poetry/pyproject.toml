@@ -1,5 +1,5 @@
 [tool.poetry]
-name = ""
+name = "" # TODO: set name and change {package_name} below
 version = "0.0.0"
 description = ""
 license = ""
@@ -52,6 +52,10 @@ select = [
   "B", # flake8-bugbear
   "RUF", # Ruff-specific rules
 ]
+
+[tool.pytest.ini_options]
+testpaths = "tests"
+addopts = "--cov={package_name} --cov-report term-missing"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
