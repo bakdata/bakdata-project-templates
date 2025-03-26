@@ -2,8 +2,8 @@
 
 This repository contains templates for open source projects at bakdata. This includes baseline configs for language tools, default project dependencies, and example CI setups.
 
-- [Java projects with Gradle](https://github.com/bakdata/bakdata-project-templates/tree/master/java-gradle)
-- [Python projects with Poetry](https://github.com/bakdata/bakdata-project-templates/tree/master/python-poetry)
+- [Java projects with Gradle](https://github.com/bakdata/bakdata-project-templates/tree/master/templates/java-gradle)
+- [Python projects with Poetry](https://github.com/bakdata/bakdata-project-templates/tree/master/templates/python-poetry)
 
 ## How to Use It
 
